@@ -1,0 +1,7 @@
+Bienvenidos al curso de NODE de Funval
+    1 el estudinte Neils es de Bolivia
+    
+    2 el estudinte Natanael es de Argentina
+    
+    3 el estudinte Felipe es de Brasil
+    
