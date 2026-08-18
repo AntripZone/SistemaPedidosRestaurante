@@ -21,6 +21,8 @@ interface estudiante {
   notas: number[];
 }
 
+app.use(Express.json());
+
 app.get("/estudiantes/:id", async function (req: Request, res: Response) {
   let idBuscado = Number(req.params.id);
   res.send(`El id de la ruta es ${idBuscado}`);
@@ -44,4 +46,18 @@ app.get("/saludar", function (req: Request, res: Response) {
 // APLICACION ESCUCHANDO EL PUERTO 3000
 app.listen(PORT, function () {
   console.log(`servidor corrigiendo en el puerto: http://localhost:${PORT}`);
+});
+//POST: CREAR UN ESTUDIANTE
+app.post("/estudiantes", async function (req: Request, res: Response) {
+  const { nombre, pais, edad, activo, notas } = req.body;
+
+  if (!nombre || !pais) {
+    return res
+      .status(400)
+      .json({ error: "El nombre y el pais son obligatorios" });
+  }
+
+  res
+    .status(201)
+    .json({ mensaje: "Estudiante creado con exito", datos: req.body });
 });
