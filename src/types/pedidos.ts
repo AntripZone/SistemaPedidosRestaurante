@@ -8,7 +8,6 @@ interface pedidos {
 
 interface crearPedido{
     clienteId: number;
-    estado: string;
     total: number;
 }
 
