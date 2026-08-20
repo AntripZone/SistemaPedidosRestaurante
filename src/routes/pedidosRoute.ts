@@ -27,7 +27,48 @@ router.get("/",
       total: resultado.length,
       datos: resultado,
     });
+  }
+);
+
+router.get("/:id", 
+    function (req: Request<idParam>, res: Response) {
+  const idBuscado = Number(req.params.id);
+
+  if (isNaN(idBuscado)) {
+    return res
+      .status(400)
+      .json({ error: "El parametro id debe ser un numero valido" });
+  }
+  const pedidoFiltrado = listaPedidos.find(
+    (p) => p.id === idBuscado,
+  );
+
+  if (!pedidoFiltrado) {
+    return res
+      .status(404)
+      .json({ error: "no existe un pedido con ese ID" });
+  }
+  return res.status(200).json(pedidoFiltrado);
+});
+
+router.post("/",
+  function (req: Request<{}, {}, crearPedido>, res: Response) {
+    const { clienteId, total } = req.body;
+    if (!clienteId || !total ) {
+      return res.status(400).json({ error: "faltan datos que son obligatorios" });
     }
-)
+    const nuevoPedido: pedidos = {
+      id:
+        listaPedidos.length > 0
+          ? listaPedidos.length + 1
+          : 1,
+      clienteId,
+      fecha:  new Date().toLocaleDateString("es-PE"),
+      total,
+      estado: "Preparando",
+    };
+    listaPedidos.push(nuevoPedido);
+    res.status(201).json(nuevoPedido);
+  });
 
 export default router;
