@@ -1,0 +1,183 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API de Sistema de Pedidos - Repartidores",
+    "description": "Documentación del módulo de personal de reparto",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Repartidores"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "activo",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Repartidores"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "descripcion": "Datos del nuevo repartidor",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nombre": {
+                  "type": "string",
+                  "example": "Felipe Arroyo"
+                },
+                "vehiculo": {
+                  "type": "string",
+                  "example": "Moto"
+                },
+                "telefono": {
+                  "type": "string",
+                  "example": "09258145"
+                },
+                "activo": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "descripcion": "Repartidor creado existosamente"
+          },
+          "400": {
+            "descripcion": "Datos invalidos o faltantes",
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/{id}": {
+      "get": {
+        "tags": [
+          "Repartidores"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "descripcion": "ID numerico del repartidor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "descripcion": "Repartidor encontrado"
+          },
+          "404": {
+            "description": "Not Found",
+            "descripcion": "Repartidor no encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Repartidores"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "descripcion": "ID numerico del repartidor"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "descripcion": "Datos a actualizar",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "vehiculo": {
+                  "type": "string",
+                  "example": "Moto"
+                },
+                "telefono": {
+                  "type": "string",
+                  "example": "12875312"
+                },
+                "activo": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "descripcion": "Reprtidor actualizado"
+          },
+          "400": {
+            "descripcion": "Datos de actulizacion invalidos",
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found",
+            "descripcion": "Repartidor no encontrado"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Repartidores"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "descripcion": "ID numerico del repartidor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "descripcion": "Reprtidor eliminado"
+          },
+          "404": {
+            "descripcion": "Repartidor no encontrado",
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  }
+}

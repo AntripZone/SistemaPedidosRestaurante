@@ -3,15 +3,19 @@ import type { Request, Response } from "express";
 import fs from "node:fs/promises";
 import path from "node:path";
 import e from "express";
-const app = e();
+const app = Express();
 const PORT = 3000;
 
 app.use(Express.json());
 
-async function obtenerProductos(): Promise<Productos[]> {
-  const ruta = path.resolve("src/ejercicio.json");
-  const texto = await fs.redfile(ruta, "utf-8");
-  return JSON.parse(texto);
+interface Producto {
+  id: number;
+  nombreProducto: string;
+  stock: number;
+  preocioUnitario: number;
+  activo: boolean;
+  marca: string;
+  categoria: string;
 }
 
 let productos = [
@@ -205,6 +209,11 @@ let productos = [
     categoria: "bebidas calientes",
   },
 ];
+async function obtenerProductos(): Promise<Producto[]> {
+  const ruta = path.resolve("src/ejercicio.json");
+  const texto = await fs.readFile(ruta, "utf-8");
+  return JSON.parse(texto);
+}
 // METODO CREATE
 app.post("/productos", (req: Request, res: Response) => {
   const nuevoProducto = {
