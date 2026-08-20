@@ -71,4 +71,22 @@ router.post("/",
     res.status(201).json(nuevoPedido);
   });
 
+router.put("/:id", function (req: Request, res: Response) {
+  const idBuscado = Number(req.params.id);
+  const index = listaPedidos.findIndex(function (p) {
+    return p.id === idBuscado;
+  });
+  if (index === -1) {
+    return res.status(404).json({ error: "Pedido no encontrado." });
+  } else {
+    const { estado }: actualizarPedido = req.body;
+    // actualizando la informacion del usuario
+    /*listaPedidos[index] = {
+      id: idBuscado,
+      estado: estado ?? listaPedidos[index]?.estado
+    };*/
+    res.json(listaPedidos[index]);
+  }
+});
+
 export default router;
