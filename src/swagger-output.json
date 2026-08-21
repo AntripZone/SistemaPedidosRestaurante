@@ -40,8 +40,14 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "201": {
             "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
@@ -67,6 +73,46 @@
         }
       },
       "put": {
+        "tags": [
+          "Pedidos"
+        ],
+        "description": "Actualiza el estado de un pedido",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID numérico del pedido"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Nuevo estado",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "entregado"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "delete": {
         "description": "",
         "parameters": [
           {
@@ -77,8 +123,8 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Not Found"
+          "default": {
+            "description": ""
           }
         }
       }

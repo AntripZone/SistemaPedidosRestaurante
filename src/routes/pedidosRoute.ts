@@ -72,22 +72,50 @@ router.post("/",
   });
 
 router.put("/:id", function (req: Request, res: Response) {
+  /*
+    #swagger.tags = ['Pedidos']
+    #swagger.description = 'Actualiza el estado de un pedido'
+    #swagger.parameters['id'] = {description: 'ID numérico del pedido'}
+    #swagger.parameters['obj'] = {
+        in: 'body',
+        description: 'Nuevo estado',
+        schema: {estado: 'entregado'}
+    }
+  */
   const idBuscado = Number(req.params.id);
   const index = listaPedidos.findIndex(function (p) {
     return p.id === idBuscado;
   });
-  if (index === -1) {
-    return res.status(404).json({ error: "Pedido no encontrado." });
+  if (index === -1) return res.status(404).json({ error: "Pedido no encontrado." });
+    
+  const { estado }: actualizarPedido = req.body;
+  if (estado === undefined) return res.status(400).json({ error: "Debe enviar el campo 'estado'." });
+    listaPedidos[index] = {
+    ...listaPedidos[index]!, 
+    estado: estado ?? listaPedidos[index]!.estado,
+  };
+    res.json(listaPedidos[index]);
+});
+
+router.delete("/:id", function (req: Request, res: Response) {
+  const idPedido = Number(req.params.id);
+    const index = Number(req.params.notaIndex);
+
+    const pedido = listaPedidos.findIndex( function(p){
+      return p.id ==- idPedido
+    });
+
+    if (index === -1) {
+    return res
+      .status(404)
+      .json({ error: "pedido no encontrado." });
   } else {
-    const { estado }: actualizarPedido = req.body;
+    let listaNuevaPedidos = listaPedidos.filter(
+      (e) => e.id !== idPedido,
+    );
+    setListaPedidos(listaNuevaPedidos);
+    res.json({ mensaje: "Pedido eliminido exitosamente." });
   }
 });
-    /*listaPedidos[index] = {
-      id: idBuscado,
-      estado: estado ?? listaPedidos[index]?.estado
-    };
-    res.json(listaPedidos[index]);
-  }
-});*/
 
 export default router;
