@@ -15,6 +15,11 @@ const router = Router();
 
 router.get("/",
     function (req: Request<{}, {}, {}, pedidosFiltrados>, res: Response) {
+        /*
+    #swagger.tags = ['Pedidos']
+    #swagger.description = 'Trae todos los datos de un pedido'
+    #swagger.parameters['estado'] = {description: 'Estado del pedido'}
+  */
         const {estado} = req.query;
         let resultado = [...listaPedidos];
 

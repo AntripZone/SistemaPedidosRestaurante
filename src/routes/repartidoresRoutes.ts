@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateRepartidor } from "../middlewares/repartidores.middleware.js";
-import { repartidores } from "../data/dataRepartidores.js" with { type: "json" };;
+import { repartidores } from "../data/dataRepartidores.js";
 
 const router = Router();
 
