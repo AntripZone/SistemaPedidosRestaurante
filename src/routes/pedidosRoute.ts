@@ -16,10 +16,10 @@ const router = Router();
 router.get("/",
     function (req: Request<{}, {}, {}, pedidosFiltrados>, res: Response) {
         /*
-    #swagger.tags = ['Pedidos']
-    #swagger.description = 'Trae todos los datos de un pedido'
-    #swagger.parameters['estado'] = {description: 'Estado del pedido'}
-  */
+        #swagger.tags = ['Pedidos']
+        #swagger.description = 'Trae todos los datos de un pedido'
+        #swagger.parameters['estado'] = {description: 'Estado del pedido'}
+      */
         const {estado} = req.query;
         let resultado = [...listaPedidos];
 
@@ -37,6 +37,11 @@ router.get("/",
 
 router.get("/:id", 
     function (req: Request<idParam>, res: Response) {
+  /*
+    #swagger.tags = ['Pedidos']
+    #swagger.description = 'Trae dato de un pedido'
+    #swagger.parameters['id'] = {description: 'Id del pedido'}
+  */
   const idBuscado = Number(req.params.id);
 
   if (isNaN(idBuscado)) {
@@ -58,6 +63,10 @@ router.get("/:id",
 
 router.post("/",
   function (req: Request<{}, {}, crearPedido>, res: Response) {
+     /*
+      #swagger.tags = ['Pedidos']
+      #swagger.description = 'Ingresa un nuevo pedido'
+    */
     const { clienteId, total } = req.body;
     if (!clienteId || !total ) {
       return res.status(400).json({ error: "faltan datos que son obligatorios" });
@@ -103,6 +112,16 @@ router.put("/:id", function (req: Request, res: Response) {
 });
 
 router.delete("/:id", function (req: Request, res: Response) {
+  /*
+    #swagger.tags = ['Pedidos']
+    #swagger.description = 'Actualiza el estado de un pedido'
+    #swagger.parameters['id'] = {description: 'ID numérico del pedido'}
+    #swagger.parameters['obj'] = {
+        in: 'body',
+        description: 'Nuevo estado',
+        schema: {estado: 'entregado'}
+    }
+  */
   const idPedido = Number(req.params.id);
     const index = Number(req.params.notaIndex);
 

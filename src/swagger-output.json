@@ -32,7 +32,10 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Pedidos"
+        ],
+        "description": "Ingresa un nuevo pedido",
         "parameters": [
           {
             "name": "body",
@@ -68,13 +71,17 @@
     },
     "/pedido/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Pedidos"
+        ],
+        "description": "Trae dato de un pedido",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Id del pedido"
           }
         ],
         "responses": {
@@ -124,13 +131,31 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Pedidos"
+        ],
+        "description": "Actualiza el estado de un pedido",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID numérico del pedido"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Nuevo estado",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "entregado"
+                }
+              }
+            }
           }
         ],
         "responses": {
