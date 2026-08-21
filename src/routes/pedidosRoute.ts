@@ -80,13 +80,14 @@ router.put("/:id", function (req: Request, res: Response) {
     return res.status(404).json({ error: "Pedido no encontrado." });
   } else {
     const { estado }: actualizarPedido = req.body;
-    // actualizando la informacion del usuario
+  }
+});
     /*listaPedidos[index] = {
       id: idBuscado,
       estado: estado ?? listaPedidos[index]?.estado
-    };*/
+    };
     res.json(listaPedidos[index]);
   }
-});
+});*/
 
 export default router;

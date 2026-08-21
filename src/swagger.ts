@@ -6,7 +6,6 @@ const doc = {
     description: "Documentacion generada automaticamente por swagger-autogen",
     version: "1.0.0",
   },
-  host: "localhost:3000",
 };
 //archivo generado
 const outputFile = "./swagger-output.json";
