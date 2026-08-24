@@ -1,18 +1,16 @@
 import swaggerAutogen from "swagger-autogen";
 
 const doc = {
-  swagger: "2.0",
   info: {
-    title: "API Sistema de Pedidos Restaurante",
-    description: "Documentación de la API",
+    title: "API de gestion academica",
+    description: "Documentacion generada automaticamente por swagger-autogen",
     version: "1.0.0",
   },
-  host: "localhost:3000",
-  schemes: ["http"],
 };
+//archivo generado
+const outputFile = "./swagger-output.json";
 
-const outputFile = "./src/swagger-output.json";
-
+//archivos q seran leidos por swagger-autogen
 const routes = ["./src/index.ts"];
 
 swaggerAutogen()(outputFile, routes, doc);
