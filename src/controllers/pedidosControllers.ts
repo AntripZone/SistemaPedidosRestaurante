@@ -1,7 +1,7 @@
 import { pool } from "../config/db.js";
 import type { Request, Response } from "express";
 
-async function getPedidos(req:Request, res: Response) {
+export async function getPedidos(req:Request, res: Response) {
     try{
         const result = await pool.query("SELECT * FROM pedidos;");
         res.json({
