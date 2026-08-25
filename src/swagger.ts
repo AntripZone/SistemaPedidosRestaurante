@@ -2,7 +2,7 @@ import swaggerAutogen from "swagger-autogen";
 
 const doc = {
   info: {
-    title: "API de gestion academica",
+    title: "API de gestion de Restaurante",
     description: "Documentacion generada automaticamente por swagger-autogen",
     version: "1.0.0",
   },
