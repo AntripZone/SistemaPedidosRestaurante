@@ -1,145 +1,361 @@
 import { Router } from "express";
-import { clientes } from "../data/clientes.data.js";
-import { validarCliente } from "../middlewares/clientes.middleware.js";
-import type { Cliente } from "../types/cliente.js";
+import { pool } from "../config/db.js";
 
 const router = Router();
 
+router.get("/", async (req, res) => {
 
-// GET /clientes
-// Muestra todos los clientes
-// También permite filtrar por ciudad:
-// /clientes?ciudad=Jalapa
+    try {
 
-router.get("/", (req, res) => {
-  const ciudad = req.query.ciudad;
+        const ciudad = req.query.ciudad;
 
-  if (ciudad && typeof ciudad === "string") {
-    const clientesFiltrados = clientes.filter((cliente) => {
-      return cliente.ciudad.toLowerCase() === ciudad.toLowerCase();
-    });
+        if (ciudad && typeof ciudad === "string") {
 
-    return res.status(200).json(clientesFiltrados);
-  }
+            const result = await pool.query(
 
-  return res.status(200).json(clientes);
+                "SELECT * FROM clientes WHERE ciudad = $1",
+
+                [ciudad]
+
+            );
+
+            return res.status(200).json(result.rows);
+
+        }
+
+        const result = await pool.query(
+
+            "SELECT * FROM clientes"
+
+        );
+
+        return res.status(200).json(result.rows);
+
+    } catch (error: any) {
+
+        console.error("Error al consultar clientes:", error.message);
+
+        return res.status(500).json({
+
+            error: error.message
+
+        });
+
+    }
+
 });
 
+ 
 
 // GET /clientes/:id
+
 // Busca un cliente específico mediante su ID
 
-router.get("/:id", (req, res) => {
-  const id = Number(req.params.id);
+router.get("/:id", async (req, res) => {
 
-  const cliente = clientes.find((cliente) => {
-    return cliente.id === id;
-  });
+    try {
 
-  if (!cliente) {
-    return res.status(404).json({
-      mensaje: "Cliente no encontrado",
-    });
-  }
+        const id = Number(req.params.id);
 
-  return res.status(200).json(cliente);
-});
+        if (isNaN(id)) {
 
+            return res.status(400).json({
 
-/* Post de los clientes */
+                mensaje: "El ID debe ser numérico"
 
+            });
 
-router.post("/", validarCliente, (req, res) => {
-  const { nombre, telefono, direccion, ciudad } = req.body;
+        }
 
-  const nuevoCliente: Cliente = {
-    id:
-      clientes.length > 0
-        ? Math.max(...clientes.map((cliente) => cliente.id)) + 1
-        : 1,
-    nombre,
-    telefono,
-    direccion,
-    ciudad,
-  };
+        const result = await pool.query(
 
-  clientes.push(nuevoCliente);
+            "SELECT * FROM clientes WHERE id = $1",
 
-  return res.status(201).json({
-    mensaje: "Cliente creado correctamente",
-    cliente: nuevoCliente,
-  });
-});
+            [id]
 
-/* PUT de los clientes */
+        );
 
-router.put("/:id", (req, res) => {
-  const id = Number(req.params.id);
+        if (result.rows.length === 0) {
 
-  const cliente = clientes.find((cliente) => {
-    return cliente.id === id;
-  });
+            return res.status(404).json({
 
-  if (!cliente) {
-    return res.status(404).json({
-      mensaje: "Cliente no encontrado",
-    });
-  }
+                mensaje: "Cliente no encontrado"
 
-  const { telefono, direccion } = req.body;
+            });
 
-  if (!telefono && !direccion) {
-    return res.status(400).json({
-      mensaje: "Debe enviar telefono o direccion para actualizar",
-    });
-  }
+        }
 
-  if (telefono !== undefined) {
-    if (typeof telefono !== "string") {
-      return res.status(400).json({
-        mensaje: "El telefono debe ser de tipo texto",
-      });
+        return res.status(200).json(result.rows[0]);
+
+    } catch (error: any) {
+
+        console.error("Error al consultar cliente:", error.message);
+
+        return res.status(500).json({
+
+            error: error.message
+
+        });
+
     }
 
-    cliente.telefono = telefono;
-  }
-
-  if (direccion !== undefined) {
-    if (typeof direccion !== "string") {
-      return res.status(400).json({
-        mensaje: "La direccion debe ser de tipo texto",
-      });
-    }
-
-    cliente.direccion = direccion;
-  }
-
-  return res.status(200).json({
-    mensaje: "Cliente actualizado correctamente",
-    cliente: cliente,
-  });
 });
 
-/* Delete del cliente  */
+ 
 
-router.delete("/:id", (req, res) => {
-  const id = Number(req.params.id);
+// POST /clientes
 
-  const indice = clientes.findIndex((cliente) => {
-    return cliente.id === id;
-  });
+// Registra un nuevo cliente
 
-  if (indice === -1) {
-    return res.status(404).json({
-      mensaje: "Cliente no encontrado",
-    });
-  }
+router.post("/", async (req, res) => {
 
-  const clienteEliminado = clientes.splice(indice, 1);
+    try {
 
-  return res.status(200).json({
-    mensaje: "Cliente eliminado correctamente",
-    cliente: clienteEliminado[0],
-  });
+        const {
+
+            nombre,
+
+            telefono,
+
+            direccion,
+
+            ciudad
+
+        } = req.body;
+
+        if (!nombre || !telefono || !direccion || !ciudad) {
+
+            return res.status(400).json({
+
+                mensaje: "nombre, telefono, direccion y ciudad son obligatorios"
+
+            });
+
+        }
+
+        const query = `
+
+            INSERT INTO clientes
+
+            (nombre, telefono, direccion, ciudad)
+
+            VALUES ($1, $2, $3, $4)
+
+            RETURNING *;
+
+        `;
+
+        const result = await pool.query(query, [
+
+            nombre,
+
+            telefono,
+
+            direccion,
+
+            ciudad
+
+        ]);
+
+        return res.status(201).json({
+
+            mensaje: "Cliente creado correctamente",
+
+            cliente: result.rows[0]
+
+        });
+
+    } catch (error: any) {
+
+        console.error("Error al crear cliente:", error.message);
+
+        return res.status(500).json({
+
+            error: error.message
+
+        });
+
+    }
+
+});
+
+ 
+
+// PUT /clientes/:id
+
+// Actualiza teléfono o dirección
+
+router.put("/:id", async (req, res) => {
+
+    try {
+
+        const id = Number(req.params.id);
+
+        if (isNaN(id)) {
+
+            return res.status(400).json({
+
+                mensaje: "El ID debe ser numérico"
+
+            });
+
+        }
+
+        const cliente = await pool.query(
+
+            "SELECT * FROM clientes WHERE id = $1",
+
+            [id]
+
+        );
+
+        if (cliente.rows.length === 0) {
+
+            return res.status(404).json({
+
+                mensaje: "Cliente no encontrado"
+
+            });
+
+        }
+
+        const { telefono, direccion } = req.body;
+
+        if (!telefono && !direccion) {
+
+            return res.status(400).json({
+
+                mensaje: "Debe enviar telefono o direccion para actualizar"
+
+            });
+
+        }
+
+        if (telefono !== undefined && typeof telefono !== "string") {
+
+            return res.status(400).json({
+
+                mensaje: "El telefono debe ser de tipo texto"
+
+            });
+
+        }
+
+        if (direccion !== undefined && typeof direccion !== "string") {
+
+            return res.status(400).json({
+
+                mensaje: "La direccion debe ser de tipo texto"
+
+            });
+
+        }
+
+        const query = `
+
+            UPDATE clientes
+
+            SET telefono = COALESCE($1, telefono),
+
+                direccion = COALESCE($2, direccion)
+
+            WHERE id = $3
+
+            RETURNING *;
+
+        `;
+
+        const result = await pool.query(query, [
+
+            telefono,
+
+            direccion,
+
+            id
+
+        ]);
+
+        return res.status(200).json({
+
+            mensaje: "Cliente actualizado correctamente",
+
+            cliente: result.rows[0]
+
+        });
+
+    } catch (error: any) {
+
+        console.error("Error al actualizar cliente:", error.message);
+
+        return res.status(500).json({
+
+            error: error.message
+
+        });
+
+    }
+
+});
+
+ 
+
+// DELETE /clientes/:id
+
+// Elimina un cliente
+
+router.delete("/:id", async (req, res) => {
+
+    try {
+
+        const id = Number(req.params.id);
+
+        if (isNaN(id)) {
+
+            return res.status(400).json({
+
+                mensaje: "El ID debe ser numérico"
+
+            });
+
+        }
+
+        const result = await pool.query(
+
+            "DELETE FROM clientes WHERE id = $1 RETURNING *",
+
+            [id]
+
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                mensaje: "Cliente no encontrado"
+
+            });
+
+        }
+
+        return res.status(200).json({
+
+            mensaje: "Cliente eliminado correctamente",
+
+            cliente: result.rows[0]
+
+        });
+
+    } catch (error: any) {
+
+        console.error("Error al eliminar cliente:", error.message);
+
+        return res.status(500).json({
+
+            error: error.message
+
+        });
+
+    }
+
 });
 export default router;

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import {pool} from "./config/db.js";
 import PedidosRoute from "./routes/pedidosRoute.js";
 import ProductosRoute from "./routes/productos.routes.js"
+import ClientesRoute from "./routes/clientes.routes.js"
 import type { Request, Response, NextFunction } from "express";
 import swaggerUi from "swagger-ui-express";
 import fs from "node:fs";
@@ -13,11 +14,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;;
 
-app.use(cors());
+// Permite que Express lea JSON enviado en el body
 app.use(express.json());
 
 app.use("/pedidos", PedidosRoute);
 app.use("/productos", ProductosRoute);
+app.use("/clientes", ClientesRoute);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const timestamp = new Date().toLocaleTimeString();
