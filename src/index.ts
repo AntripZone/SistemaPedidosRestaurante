@@ -2,10 +2,7 @@ import express from "express";
 import cors from "cors";
 import type { Request, Response, NextFunction } from "express";
 import { cargarData } from "./data/data.js";
-import pedidosRoute from "./routes/pedidosRoute";
-import clientesRoute from "./routes/clientes.routes.js";
 import productosRoute from "./routes/productos.routes.js";
-import repartidoresRoutes from "./routes/repartidoresRoutes.js";
 import swaggerUi from "swagger-ui-express";
 import fs from "node:fs";
 import path from "node:path";
@@ -33,10 +30,8 @@ if (fs.existsSync(swaggerFilePath)) {
   console.log("archivo swagger-output.json no encontrado");
 }
 
-app.use("/pedido", pedidosRoute);
-app.use("/clientes", clientesRoute);
+
 app.use("/productos", productosRoute);
-app.use("/repartidores", repartidoresRoutes);
 app.listen(PORT, async () => {
   await cargarData();
   console.log(`servidor corriendo en el puerto : http://localhost:${PORT}`);
