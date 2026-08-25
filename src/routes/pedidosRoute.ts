@@ -1,0 +1,145 @@
+import { Router } from "express";
+import type { Request, Response } from "express";
+
+import { listaPedidos, setListaPedidos } from "../data/data.js";
+
+import type {
+    pedidos,
+    crearPedido,
+    actualizarPedido,
+    pedidosFiltrados,
+    idParam,
+} from "../types/pedidos.js";
+
+const router = Router();
+
+router.get("/",
+    function (req: Request<{}, {}, {}, pedidosFiltrados>, res: Response) {
+        /*
+        #swagger.tags = ['Pedidos']
+        #swagger.description = 'Trae todos los datos de un pedido'
+        #swagger.parameters['estado'] = {description: 'Estado del pedido'}
+      */
+        const {estado} = req.query;
+        let resultado = [...listaPedidos];
+
+        if(estado) {
+            resultado = resultado.filter(
+                (e) => e.estado.toLowerCase() === estado.toLowerCase(),
+            );
+        }
+      return res.json({
+      total: resultado.length,
+      datos: resultado,
+    });
+  }
+);
+
+router.get("/:id", 
+    function (req: Request<idParam>, res: Response) {
+  /*
+    #swagger.tags = ['Pedidos']
+    #swagger.description = 'Trae dato de un pedido'
+    #swagger.parameters['id'] = {description: 'Id del pedido'}
+  */
+  const idBuscado = Number(req.params.id);
+
+  if (isNaN(idBuscado)) {
+    return res
+      .status(400)
+      .json({ error: "El parametro id debe ser un numero valido" });
+  }
+  const pedidoFiltrado = listaPedidos.find(
+    (p) => p.id === idBuscado,
+  );
+
+  if (!pedidoFiltrado) {
+    return res
+      .status(404)
+      .json({ error: "no existe un pedido con ese ID" });
+  }
+  return res.status(200).json(pedidoFiltrado);
+});
+
+router.post("/",
+  function (req: Request<{}, {}, crearPedido>, res: Response) {
+     /*
+      #swagger.tags = ['Pedidos']
+      #swagger.description = 'Ingresa un nuevo pedido'
+    */
+    const { clienteId, total } = req.body;
+    if (!clienteId || !total ) {
+      return res.status(400).json({ error: "faltan datos que son obligatorios" });
+    }
+    const nuevoPedido: pedidos = {
+      id:
+        listaPedidos.length > 0
+          ? listaPedidos.length + 1
+          : 1,
+      clienteId,
+      fecha:  new Date().toLocaleDateString("es-PE"),
+      total,
+      estado: "Preparando",
+    };
+    listaPedidos.push(nuevoPedido);
+    res.status(201).json(nuevoPedido);
+  });
+
+router.put("/:id", function (req: Request, res: Response) {
+  /*
+    #swagger.tags = ['Pedidos']
+    #swagger.description = 'Actualiza el estado de un pedido'
+    #swagger.parameters['id'] = {description: 'ID numérico del pedido'}
+    #swagger.parameters['obj'] = {
+        in: 'body',
+        description: 'Nuevo estado',
+        schema: {estado: 'entregado'}
+    }
+  */
+  const idBuscado = Number(req.params.id);
+  const index = listaPedidos.findIndex(function (p) {
+    return p.id === idBuscado;
+  });
+  if (index === -1) return res.status(404).json({ error: "Pedido no encontrado." });
+    
+  const { estado }: actualizarPedido = req.body;
+  if (estado === undefined) return res.status(400).json({ error: "Debe enviar el campo 'estado'." });
+    listaPedidos[index] = {
+    ...listaPedidos[index]!, 
+    estado: estado ?? listaPedidos[index]!.estado,
+  };
+    res.json(listaPedidos[index]);
+});
+
+router.delete("/:id", function (req: Request, res: Response) {
+  /*
+    #swagger.tags = ['Pedidos']
+    #swagger.description = 'Actualiza el estado de un pedido'
+    #swagger.parameters['id'] = {description: 'ID numérico del pedido'}
+    #swagger.parameters['obj'] = {
+        in: 'body',
+        description: 'Nuevo estado',
+        schema: {estado: 'entregado'}
+    }
+  */
+  const idPedido = Number(req.params.id);
+    const index = Number(req.params.notaIndex);
+
+    const pedido = listaPedidos.findIndex( function(p){
+      return p.id ==- idPedido
+    });
+
+    if (index === -1) {
+    return res
+      .status(404)
+      .json({ error: "pedido no encontrado." });
+  } else {
+    let listaNuevaPedidos = listaPedidos.filter(
+      (e) => e.id !== idPedido,
+    );
+    setListaPedidos(listaNuevaPedidos);
+    res.json({ mensaje: "Pedido eliminido exitosamente." });
+  }
+});
+
+export default router;
