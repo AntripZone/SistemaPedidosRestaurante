@@ -13,7 +13,7 @@ import path from "node:path";
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;;
+const PORT = process.env.PORT || 3000;
 
 // Permite que Express lea JSON enviado en el body
 app.use(express.json());
