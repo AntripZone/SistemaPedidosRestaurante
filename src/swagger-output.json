@@ -23,10 +23,27 @@
     },
     "/pedidos/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Pedidos"
+        ],
+        "description": "Lista todos los pedidos",
+        "parameters": [
+          {
+            "name": "estado",
+            "in": "query",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "201": {
+            "description": "Repartidor creado exitosamente"
+          },
+          "400": {
+            "descripcion": "Datos invalidos o faltantes",
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -34,7 +51,10 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Pedidos"
+        ],
+        "description": "Ingresa un nuevo pedido",
         "parameters": [
           {
             "name": "body",
@@ -70,21 +90,29 @@
     },
     "/pedidos/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Pedidos"
+        ],
+        "description": "Trae dato de un pedido",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Id del pedido"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
           },
+          "201": {
+            "description": "Repartidor creado exitosamente"
+          },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request",
+            "descripcion": "Datos invalidos o faltantes"
           },
           "404": {
             "description": "Not Found"
@@ -95,28 +123,28 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Pedidos"
+        ],
+        "description": "Actualiza el estado de un pedido",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID numérico del pedido"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "Nuevo estado",
             "schema": {
               "type": "object",
               "properties": {
-                "fecha": {
-                  "example": "any"
-                },
                 "estado": {
-                  "example": "any"
-                },
-                "total": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "entregado"
                 }
               }
             }
@@ -138,13 +166,31 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Pedidos"
+        ],
+        "description": "Actualiza el estado de un pedido",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID numérico del pedido"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Nuevo estado",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "entregado"
+                }
+              }
+            }
           }
         ],
         "responses": {

@@ -2,22 +2,37 @@ import { pool } from "../config/db.js";
 import type { Request, Response } from "express";
 
 export async function getPedidos(req:Request, res: Response) {
+      /* #swagger.tags = ['Pedidos']
+     #swagger.description = 'Lista todos los pedidos'
+     #swagger.responses[201] = {description: 'Repartidor creado exitosamente'}
+     #swagger.responses[400] = {descripcion: 'Datos invalidos o faltantes'} */
     try{
-        const result = await pool.query("SELECT * FROM pedidos;");
-        res.json({
-            message: "Conexion exitosa a la base de datos",
-            total: result.rowCount,
-            data: result.rows,
-        });
+        const estado = req.query.estado as string | undefined;
+
+    const result = estado
+      ? await pool.query(
+          "SELECT * FROM pedidos WHERE LOWER(estado) = LOWER($1)",
+          [estado],
+        )
+      : await pool.query("SELECT * FROM pedidos");
+    res.json(result.rows);
+
     }catch(error){
-        console.error("Error al consultar PostgreSQL: ");
+       console.error("Error al obtener pedidos:", error);
         res.status(500).json({
             message: "Error al conectar al Base de Datos.",
         });
-    }  
+    }
 }
 
 export async function getPedidosId(req: Request, res: Response) {
+      /*
+    #swagger.tags = ['Pedidos']
+    #swagger.description = 'Trae dato de un pedido'
+    #swagger.parameters['id'] = {description: 'Id del pedido'}
+
+     #swagger.responses[201] = {description: 'Repartidor creado exitosamente'}
+     #swagger.responses[400] = {descripcion: 'Datos invalidos o faltantes'} */
     try{
         const id = Number(req.params.id);
         if(isNaN(id)){
@@ -35,10 +50,14 @@ export async function getPedidosId(req: Request, res: Response) {
 }
 
 export async function postPedidos(req: Request, res: Response) {
+     /*
+      #swagger.tags = ['Pedidos']
+      #swagger.description = 'Ingresa un nuevo pedido'
+    */
     try{
         const {fecha, estado, total} = req.body;
         if(!fecha || !estado || !total) res.status(400).json({error: "Faltan datos"});
-        
+
         const query = "INSER INTO pedidos (fecha, estado, total) VALUES ($1, $2, $3) RETURNING *;";
         const result = await pool.query(query, [fecha, estado, total]);
 
@@ -49,6 +68,16 @@ export async function postPedidos(req: Request, res: Response) {
 }
 
 export async function putPedidos(req: Request, res: Response) {
+     /*
+    #swagger.tags = ['Pedidos']
+    #swagger.description = 'Actualiza el estado de un pedido'
+    #swagger.parameters['id'] = {description: 'ID numérico del pedido'}
+    #swagger.parameters['obj'] = {
+        in: 'body',
+        description: 'Nuevo estado',
+        schema: {estado: 'entregado'}
+    }
+  */
     try{
         const idBuscado = Number (req.params.id);
         if (isNaN(idBuscado)) res.status(400).json({error: "El Id debe ser un valor numerico"});
@@ -76,6 +105,16 @@ export async function putPedidos(req: Request, res: Response) {
 }
 
 export async function deletePedidos(req: Request, res: Response) {
+    /*
+    #swagger.tags = ['Pedidos']
+    #swagger.description = 'Actualiza el estado de un pedido'
+    #swagger.parameters['id'] = {description: 'ID numérico del pedido'}
+    #swagger.parameters['obj'] = {
+        in: 'body',
+        description: 'Nuevo estado',
+        schema: {estado: 'entregado'}
+    }
+  */
     try {
         const idBuscado = Number(req.params.id);
         if(isNaN(idBuscado)) res.status(400).json({error: "El Id debe ser un valor numerico"});
