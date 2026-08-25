@@ -32,7 +32,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 const swaggerFilePath = path.resolve("./src/swagger-output.json");
 if (fs.existsSync(swaggerFilePath)) {
   const swaggerDocument = JSON.parse(fs.readFileSync(swaggerFilePath, "utf-8"));
-  // Host/scheme relativos: funciona en localhost y detras de un dev tunnel https
   delete swaggerDocument.host;
   delete swaggerDocument.schemes;
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
