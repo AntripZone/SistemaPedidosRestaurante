@@ -1,8 +1,11 @@
 import type { Request, Response } from "express";
 import { pool } from "../config/db.js";
-import { RepartidorModel } from "../models/repartidoresModel.js"; 
+import { RepartidorModel } from "../models/repartidoresModel.js";
 
 export async function getRepartidores(req: Request, res: Response) {
+   /* #swagger.tags = ['Repartidores']
+     #swagger.description = 'Lista todos los repartidores'
+  */
   try {
     const repartidores = await RepartidorModel.findAll();
     res.json({ totalRepartidores: repartidores.length, data: repartidores });
@@ -15,6 +18,9 @@ export async function getRepartidores(req: Request, res: Response) {
 }
 
 export async function getRepartidorById(req: Request, res: Response) {
+  /* #swagger.tags = ['Repartidores']
+     #swagger.description = 'Lista todos los repartidores por id'
+  */
   try {
     const id = Number(req.params.id);
     if (isNaN(id)) {
@@ -33,6 +39,9 @@ export async function getRepartidorById(req: Request, res: Response) {
 }
 
 export async function postRepartidor(req: Request, res: Response) {
+   /* #swagger.tags = ['Repartidores']
+     #swagger.description = 'Crea un nuevo repartidor'
+  */
   try {
     const { nombre, vehiculo, activo } = req.body;
     if (!nombre || !vehiculo) {
@@ -47,6 +56,9 @@ export async function postRepartidor(req: Request, res: Response) {
 }
 
 export async function putRepartidor(req: Request, res: Response) {
+   /* #swagger.tags = ['Repartidores']
+     #swagger.description = 'Actualiza un repartidor por id'
+  */
   try {
     const id = Number(req.params.id);
     if (isNaN(id)) {
@@ -65,6 +77,9 @@ export async function putRepartidor(req: Request, res: Response) {
 }
 
 export async function deleteRepartidor(req: Request, res: Response) {
+  /* #swagger.tags = ['Repartidores']
+     #swagger.description = 'Elimina un repartidor por id'
+  */
   try {
     const id = Number(req.params.id);
     if (isNaN(id)) {

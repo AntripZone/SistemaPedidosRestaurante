@@ -135,6 +135,20 @@
             "required": true,
             "type": "string",
             "description": "ID numérico del pedido"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Nuevo estado",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "entregado"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -192,27 +206,42 @@
         }
       },
       "post": {
+        "tags": [
+          "Producto"
+        ],
+        "summary": "crear un producto nuevo",
         "description": "",
         "parameters": [
           {
             "name": "body",
             "in": "body",
+            "description": "Datos para crear un producto nuevo",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "nombre": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "coca cola"
                 },
                 "categoria": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "bebida"
                 },
                 "precio": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 15
                 },
                 "disponible": {
-                  "example": "any"
+                  "type": "boolean",
+                  "example": true
                 }
-              }
+              },
+              "required": [
+                "nombre",
+                "categoria",
+                "precio"
+              ]
             }
           }
         ],
@@ -334,13 +363,19 @@
             "schema": {
               "type": "object",
               "properties": {
-                "nombre": {
+                "nombres": {
+                  "example": "any"
+                },
+                "apellidos": {
                   "example": "any"
                 },
                 "telefono": {
                   "example": "any"
                 },
                 "direccion": {
+                  "example": "any"
+                },
+                "email": {
                   "example": "any"
                 },
                 "ciudad": {
@@ -457,14 +492,10 @@
     },
     "/repartidores/": {
       "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "nombre",
-            "in": "query",
-            "type": "string"
-          }
+        "tags": [
+          "Repartidores"
         ],
+        "description": "Lista todos los repartidores",
         "responses": {
           "200": {
             "description": "OK"
@@ -478,27 +509,22 @@
         "tags": [
           "Repartidores"
         ],
-        "description": "Registra a un nuevo repartidor",
+        "description": "Crea un nuevo repartidor",
         "parameters": [
           {
-            "name": "obj",
+            "name": "body",
             "in": "body",
-            "description": "Datos del nuevo repartidor",
-            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "nombre": {
-                  "type": "string",
-                  "example": "Felipe Arroyo"
+                  "example": "any"
                 },
                 "vehiculo": {
-                  "type": "string",
-                  "example": "Moto"
+                  "example": "any"
                 },
                 "activo": {
-                  "type": "boolean",
-                  "example": true
+                  "example": "any"
                 }
               }
             }
@@ -506,10 +532,9 @@
         ],
         "responses": {
           "201": {
-            "description": "Repartidor creado exitosamente"
+            "description": "Created"
           },
           "400": {
-            "descripcion": "Datos invalidos o faltantes",
             "description": "Bad Request"
           },
           "500": {
@@ -520,7 +545,10 @@
     },
     "/repartidores/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Repartidores"
+        ],
+        "description": "Lista todos los repartidores por id",
         "parameters": [
           {
             "name": "id",
@@ -532,6 +560,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
@@ -545,46 +576,24 @@
         "tags": [
           "Repartidores"
         ],
-        "description": "Actualiza los datos del repartidor",
+        "description": "Actualiza un repartidor por id",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "description": "ID numerico del repartidor"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Datos a actualizar",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "nombre": {
-                  "type": "string",
-                  "example": "Felipe Arroyo"
-                },
-                "vehiculo": {
-                  "type": "string",
-                  "example": "Auto"
-                },
-                "activo": {
-                  "type": "boolean",
-                  "example": false
-                }
-              }
-            }
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "descripcion": "Repartidor actualizado"
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
-            "description": "Not Found",
-            "descripcion": "Repartidor no encontrado"
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -595,24 +604,24 @@
         "tags": [
           "Repartidores"
         ],
-        "description": "Elimina un repartidor del sistema",
+        "description": "Elimina un repartidor por id",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "description": "ID numerico del repartidor"
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "descripcion": "Repartidor eliminado"
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
-            "description": "Not Found",
-            "descripcion": "Repartidor no encontrado"
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"

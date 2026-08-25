@@ -66,6 +66,11 @@ export async function putPedidos(req: Request, res: Response) {
     #swagger.tags = ['Pedidos']
     #swagger.description = 'Actualiza el estado de un pedido'
     #swagger.parameters['id'] = {description: 'ID numérico del pedido'}
+    #swagger.parameters['obj'] = {
+        in: 'body',
+        description: 'Nuevo estado',
+        schema: {estado: 'entregado'}
+    }
   */
     try{
         const idBuscado = Number (req.params.id);

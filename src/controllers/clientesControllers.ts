@@ -82,7 +82,7 @@ export const createCliente = async (
   try {
 
     const {
-      nombre,
+      nombres,
       apellidos,
       telefono,
       direccion,
@@ -91,14 +91,14 @@ export const createCliente = async (
     } = req.body;
 
     // Campos obligatorios según el ejercicio
-    if (!nombre || !telefono || !direccion || !ciudad) {
+    if (!nombres || !telefono || !direccion || !ciudad) {
       return res.status(400).json({
-        error: "nombre, telefono, direccion y ciudad son obligatorios",
+        error: "nombres, telefono, direccion y ciudad son obligatorios",
       });
     }
 
     const nuevoCliente: CreateClienteInput = {
-      nombre,
+      nombres,
       apellidos,
       telefono,
       direccion,
