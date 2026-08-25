@@ -5,7 +5,6 @@ import type { Cliente } from "../types/cliente.js";
 
 const router = Router();
 
-
 // GET /clientes
 // Muestra todos los clientes
 // También permite filtrar por ciudad:
