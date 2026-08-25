@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "API Sistema de Pedidos Restaurante",
-    "description": "Documentación de la API",
+    "title": "API de gestion de Restaurante",
+    "description": "Documentacion generada automaticamente por swagger-autogen",
     "version": "1.0.0"
   },
   "host": "localhost:3000",
@@ -11,31 +11,30 @@
     "http"
   ],
   "paths": {
-    "/pedido/": {
+    "/": {
       "get": {
-        "tags": [
-          "Pedidos"
-        ],
-        "description": "Trae todos los datos de un pedido",
-        "parameters": [
-          {
-            "name": "estado",
-            "description": "Estado del pedido",
-            "in": "query",
-            "type": "string"
-          }
-        ],
+        "description": "",
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/pedidos/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
       "post": {
-        "tags": [
-          "Pedidos"
-        ],
-        "description": "Ingresa un nuevo pedido",
+        "description": "",
         "parameters": [
           {
             "name": "body",
@@ -43,7 +42,10 @@
             "schema": {
               "type": "object",
               "properties": {
-                "clienteId": {
+                "fecha": {
+                  "example": "any"
+                },
+                "estado": {
                   "example": "any"
                 },
                 "total": {
@@ -54,169 +56,19 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
           "201": {
             "description": "Created"
           },
           "400": {
             "description": "Bad Request"
           },
-          "404": {
-            "description": "Not Found"
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
-    "/pedido/{id}": {
-      "get": {
-        "tags": [
-          "Pedidos"
-        ],
-        "description": "Trae dato de un pedido",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "Id del pedido"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Pedidos"
-        ],
-        "description": "Actualiza el estado de un pedido",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "ID numérico del pedido"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Nuevo estado",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "estado": {
-                  "type": "string",
-                  "example": "entregado"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Pedidos"
-        ],
-        "description": "Actualiza el estado de un pedido",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "ID numérico del pedido"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Nuevo estado",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "estado": {
-                  "type": "string",
-                  "example": "entregado"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/clientes/": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "ciudad",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "nombre": {
-                  "example": "any"
-                },
-                "telefono": {
-                  "example": "any"
-                },
-                "direccion": {
-                  "example": "any"
-                },
-                "ciudad": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/clientes/{id}": {
+    "/pedidos/{id}": {
       "get": {
         "description": "",
         "parameters": [
@@ -231,8 +83,14 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -251,10 +109,13 @@
             "schema": {
               "type": "object",
               "properties": {
-                "telefono": {
+                "fecha": {
                   "example": "any"
                 },
-                "direccion": {
+                "estado": {
+                  "example": "any"
+                },
+                "total": {
                   "example": "any"
                 }
               }
@@ -262,14 +123,17 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "202": {
+            "description": "Accepted"
           },
           "400": {
             "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -287,8 +151,11 @@
           "200": {
             "description": "OK"
           },
-          "404": {
-            "description": "Not Found"
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -306,6 +173,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -340,6 +210,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -359,8 +232,396 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nombre": {
+                  "example": "any"
+                },
+                "precio": {
+                  "example": "any"
+                },
+                "disponible": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/clientes/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "ciudad",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nombre": {
+                  "example": "any"
+                },
+                "telefono": {
+                  "example": "any"
+                },
+                "direccion": {
+                  "example": "any"
+                },
+                "ciudad": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/clientes/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "telefono": {
+                  "example": "any"
+                },
+                "direccion": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/repartidores/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "nombre",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Repartidores"
+        ],
+        "description": "Registra a un nuevo repartidor",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Datos del nuevo repartidor",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nombre": {
+                  "type": "string",
+                  "example": "Felipe Arroyo"
+                },
+                "vehiculo": {
+                  "type": "string",
+                  "example": "Moto"
+                },
+                "activo": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Repartidor creado exitosamente"
+          },
+          "400": {
+            "descripcion": "Datos invalidos o faltantes",
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/repartidores/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Repartidores"
+        ],
+        "description": "Actualiza los datos del repartidor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID numerico del repartidor"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Datos a actualizar",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nombre": {
+                  "type": "string",
+                  "example": "Felipe Arroyo"
+                },
+                "vehiculo": {
+                  "type": "string",
+                  "example": "Auto"
+                },
+                "activo": {
+                  "type": "boolean",
+                  "example": false
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "descripcion": "Repartidor actualizado"
+          },
+          "404": {
+            "description": "Not Found",
+            "descripcion": "Repartidor no encontrado"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Repartidores"
+        ],
+        "description": "Elimina un repartidor del sistema",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID numerico del repartidor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "descripcion": "Repartidor eliminado"
+          },
+          "404": {
+            "description": "Not Found",
+            "descripcion": "Repartidor no encontrado"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
