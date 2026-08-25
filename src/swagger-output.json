@@ -11,140 +11,12 @@
     "http"
   ],
   "paths": {
-    "/pedido/": {
+    "/": {
       "get": {
         "description": "",
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/clientes/": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "ciudad",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "nombre": {
-                  "example": "any"
-                },
-                "telefono": {
-                  "example": "any"
-                },
-                "direccion": {
-                  "example": "any"
-                },
-                "ciudad": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          }
-        }
-      }
-    },
-    "/clientes/{id}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "telefono": {
-                  "example": "any"
-                },
-                "direccion": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
           }
         }
       }
@@ -159,6 +31,7 @@
           {
             "name": "estado",
             "in": "query",
+            "description": "Estado del pedido",
             "type": "string"
           }
         ],
@@ -262,20 +135,6 @@
             "required": true,
             "type": "string",
             "description": "ID numérico del pedido"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Nuevo estado",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "estado": {
-                  "type": "string",
-                  "example": "entregado"
-                }
-              }
-            }
           }
         ],
         "responses": {
@@ -297,7 +156,7 @@
         "tags": [
           "Pedidos"
         ],
-        "description": "Actualiza el estado de un pedido",
+        "description": "Elimina un pedido",
         "parameters": [
           {
             "name": "id",
@@ -305,20 +164,6 @@
             "required": true,
             "type": "string",
             "description": "ID numérico del pedido"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Nuevo estado",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "estado": {
-                  "type": "string",
-                  "example": "entregado"
-                }
-              }
-            }
           }
         ],
         "responses": {
@@ -337,13 +182,6 @@
     "/productos/": {
       "get": {
         "description": "",
-        "parameters": [
-          {
-            "name": "categoria",
-            "in": "query",
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -425,24 +263,6 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "nombre": {
-                  "example": "any"
-                },
-                "precio": {
-                  "example": "any"
-                },
-                "disponible": {
-                  "example": "any"
-                }
-              }
-            }
           }
         ],
         "responses": {

@@ -4,10 +4,12 @@ import type { Request, Response } from "express";
 export async function getPedidos(req:Request, res: Response) {
       /* #swagger.tags = ['Pedidos']
      #swagger.description = 'Lista todos los pedidos'
+     #swagger.parameters['estado'] = {in: 'query', description: 'Estado del pedido', type: 'string'}
      #swagger.responses[201] = {description: 'Repartidor creado exitosamente'}
      #swagger.responses[400] = {descripcion: 'Datos invalidos o faltantes'} */
     try{
-        const pedidos = await PedidosModel.findAll();
+        const estado = req.query.estado as string | undefined;
+        const pedidos = await PedidosModel.findAll(estado);
         res.json({totalPedidos: pedidos.length, data:pedidos});
     }catch(error){
        console.error("Error al obtener pedidos:", error);
@@ -64,11 +66,6 @@ export async function putPedidos(req: Request, res: Response) {
     #swagger.tags = ['Pedidos']
     #swagger.description = 'Actualiza el estado de un pedido'
     #swagger.parameters['id'] = {description: 'ID numérico del pedido'}
-    #swagger.parameters['obj'] = {
-        in: 'body',
-        description: 'Nuevo estado',
-        schema: {estado: 'entregado'}
-    }
   */
     try{
         const idBuscado = Number (req.params.id);
@@ -88,19 +85,14 @@ export async function putPedidos(req: Request, res: Response) {
 export async function deletePedidos(req: Request, res: Response) {
     /*
     #swagger.tags = ['Pedidos']
-    #swagger.description = 'Actualiza el estado de un pedido'
+    #swagger.description = 'Elimina un pedido'
     #swagger.parameters['id'] = {description: 'ID numérico del pedido'}
-    #swagger.parameters['obj'] = {
-        in: 'body',
-        description: 'Nuevo estado',
-        schema: {estado: 'entregado'}
-    }
   */
     try {
         const idBuscado = Number(req.params.id);
         if(isNaN(idBuscado)) res.status(400).json({error: "El Id debe ser un valor numerico"});
 
-        const resu = await pool.query("DELETE FROM pedidos WHERE id = $1;", [idBuscado]);
+        const pedidoEliminado = await PedidosModel.delete(idBuscado);
         res.status(200).json({message: "Pedido Eliminado"});
     } catch (error: any) {
         res.status(500).json({error: error.message});

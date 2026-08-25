@@ -1,4 +1,3 @@
-import { create } from "node:domain";
 import { pool } from "../config/db.js";
 
 export interface Pedidos {
@@ -19,7 +18,7 @@ export const PedidosModel = {
     },
     findById: async (id: number): Promise<Pedidos | null> => {
     const { rows } = await pool.query(
-      "SELECT * FROM productos WHERE id = $1;",
+      "SELECT * FROM pedidos WHERE id = $1;",
       [id],
     );
     return rows[0] || null;
