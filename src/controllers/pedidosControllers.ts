@@ -1,5 +1,9 @@
 import { PedidosModel } from "../models/pedidosModel.js";
 import type { Request, Response } from "express";
+import {
+  createPedidosSchema,
+  updatePedidosSchema,
+} from "../schemas/pedidosSchema.js";
 
 export async function getPedidos(req:Request, res: Response) {
       /* #swagger.tags = ['Pedidos']

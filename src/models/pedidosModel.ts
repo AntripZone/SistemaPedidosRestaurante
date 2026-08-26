@@ -9,7 +9,7 @@ export interface Pedidos {
     id_repartidor: number | null
 }
 
-export type CreatePedidoInput = Omit<Pedidos, "id" | "fecha" | "estado">;
+export type CreatePedidoInput = Omit<Pedidos, "id" | "fecha" | "estado">& {id_repartidor?: Pedidos["id_repartidor"]};
 export type UpdatePedidoInput = { estado: string;};
 
 export const PedidosModel = {

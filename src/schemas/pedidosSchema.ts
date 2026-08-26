@@ -23,24 +23,11 @@ export const createPedidosSchema = z.object({
 });
 
 export const updatePedidosSchema = z.object({
-  nombre: z
+  estado: z
     .string({
-      message: "El nombre debe ser obligatorio",
+      message: "El estado es obligatorio",
     })
-    .min(3, "el nombre debe tener almenos 3 caracteres")
+    .min(3, "El estado debe tener al menos 3 caracteres")
     .trim()
-    .min(1)
-    .optional(),
-  precio: z
-    .number({
-      message: "El precio debe ser obligatorio",
-    })
-    .positive("el precio debe ser mayor a 0"),
-  categoria: z
-    .string({
-      message: "la categoria debe ser obligatorio",
-    })
-    .min(3, "la categoria debe tener almenos 3 caracteres")
-    .trim()
-    .min(1),
+    .min(1, "El estado no puede estar vacío"),
 });
