@@ -1,10 +1,12 @@
 import { Router } from "express";
-import { 
+import {
     getPedidos,
     getPedidosId,
     postPedidos,
     putPedidos,
     deletePedidos } from "../controllers/pedidosControllers.js";
+import { validateSchema } from "../middleware/validadorMidleware.js";
+import { createPedidosSchema, updatePedidosSchema } from "../schemas/pedidosSchema.js";
 
 const router = Router();
 

@@ -2,14 +2,15 @@ import { pool } from "../config/db.js";
 
 export interface Pedidos {
     id: number,
+    cliente_id: number,
     fecha: string,
     estado: string,
-    total: number
+    total: number,
+    id_repartidor: number | null
 }
 
-export type CreatePedidoInput = Omit<Pedidos, "id">;
-export type UpdatePedidoInput = Partial<CreatePedidoInput>;
-
+export type CreatePedidoInput = Omit<Pedidos, "id" | "fecha" | "estado">;
+export type UpdatePedidoInput = { estado: string;};
 
 export const PedidosModel = {
     findAll: async (estado?: string): Promise<Pedidos[]> => {
@@ -24,10 +25,14 @@ export const PedidosModel = {
     return rows[0] || null;
   },
   create: async (dato: CreatePedidoInput): Promise<Pedidos> => {
-    const { fecha, estado, total } = dato;
+    const { cliente_id, total, id_repartidor } = dato;
     const query =
-      "INSERT INTO pedidos (fecha , estado , total) VALUES ($1,$2,$3) RETURNING *;";
-    const { rows } = await pool.query(query, [fecha, estado, total]);
+      "INSERT INTO pedidos (cliente_id, fecha, estado, total, id_repartidor) VALUES ($1, CURRENT_TIMESTAMP,'Preparando',$2, $3) RETURNING *;";
+    const { rows } = await pool.query(query, [
+      cliente_id,
+      total,
+      id_repartidor ?? null,
+    ]);
     return rows[0];
   },
   update: async (
@@ -36,13 +41,11 @@ export const PedidosModel = {
   ): Promise<Pedidos | null> => {
     const { rows } = await pool.query(
       `UPDATE pedidos
-            SET fecha = $1,
-            estado = $2,
-            total = $3
-            WHERE id = $4
+            SET estado = $1
+            WHERE id = $2
             RETURNING *;
 `,
-      [dato.fecha, dato.estado, dato.total, id],
+       [dato.estado, id],
     );
     return rows[0] || null;
   },

@@ -55,22 +55,26 @@
         "tags": [
           "Pedidos"
         ],
-        "description": "Ingresa un nuevo pedido",
+        "description": "Ingresa un nuevo pedido, id_repartidor es opcional",
         "parameters": [
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "fecha": {
-                  "example": "any"
-                },
-                "estado": {
-                  "example": "any"
+                "cliente_id": {
+                  "type": "number",
+                  "example": 1
                 },
                 "total": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 45.5
+                },
+                "id_repartidor": {
+                  "type": "number",
+                  "example": 2
                 }
               }
             }
@@ -79,9 +83,6 @@
         "responses": {
           "201": {
             "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"

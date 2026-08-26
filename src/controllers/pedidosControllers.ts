@@ -47,14 +47,20 @@ export async function getPedidosId(req: Request, res: Response) {
 export async function postPedidos(req: Request, res: Response) {
      /*
       #swagger.tags = ['Pedidos']
-      #swagger.description = 'Ingresa un nuevo pedido'
+      #swagger.description = 'Ingresa un nuevo pedido, id_repartidor es opcional'
+      #swagger.parameters['body'] = {
+        in: 'body',
+        required: true,
+        schema: {
+        cliente_id: 1,
+        total: 45.50,
+        id_repartidor: 2
+        }
+    }
     */
     try{
-        const {fecha, estado, total} = req.body;
-        if(!fecha || !estado || !total){
-            res.status(400).json({error: "Faltan datos"});
-        }
-        const nuevoPedido = await PedidosModel.create({fecha, estado, total});
+        // req.body ya viene validado por el middleware validateSchema(createPedidoSchema)
+        const nuevoPedido = await PedidosModel.create(req.body);
         res.status(201).json({data: nuevoPedido});
     }catch(error: any){
         res.status(500).json({error: error.message});
