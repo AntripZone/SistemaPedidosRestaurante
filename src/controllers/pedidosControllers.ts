@@ -64,7 +64,11 @@ export async function postPedidos(req: Request, res: Response) {
     */
     try{
         // req.body ya viene validado por el middleware validateSchema(createPedidoSchema)
-        const nuevoPedido = await PedidosModel.create(req.body);
+        const nuevoPedido = createPedidosSchema.safeParse(req.body);
+        console.log(nuevoPedido);
+        if (!nuevoPedido.success) {
+      return res.status(400).json({ error: nuevoPedido.error.issues });
+    }
         res.status(201).json({data: nuevoPedido});
     }catch(error: any){
         res.status(500).json({error: error.message});
@@ -85,6 +89,12 @@ export async function putPedidos(req: Request, res: Response) {
     try{
         const idBuscado = Number (req.params.id);
         if (isNaN(idBuscado)) res.status(400).json({error: "El Id debe ser un valor numerico"});
+
+        const result = updatePedidosSchema.safeParse(req.body);
+        if (!result.success) {
+        res.status(400).json({ error: result.error.issues });
+        return;
+        }
 
         const pedidoUpdate = await PedidosModel.update(idBuscado, req.body);
         if(!pedidoUpdate){
