@@ -64,11 +64,12 @@ export async function postPedidos(req: Request, res: Response) {
     */
     try{
         // req.body ya viene validado por el middleware validateSchema(createPedidoSchema)
-        const nuevoPedido = createPedidosSchema.safeParse(req.body);
-        console.log(nuevoPedido);
-        if (!nuevoPedido.success) {
+    const nuevoPedido = createPedidosSchema.safeParse(req.body);
+    console.log(nuevoPedido);
+    if (!nuevoPedido.success) {
       return res.status(400).json({ error: nuevoPedido.error.issues });
     }
+    const newPedido = await PedidosModel.create(nuevoPedido.data);
         res.status(201).json({data: nuevoPedido});
     }catch(error: any){
         res.status(500).json({error: error.message});
