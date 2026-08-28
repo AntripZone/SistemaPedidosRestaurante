@@ -13,6 +13,9 @@ export const getClientes = async (
   req: Request,
   res: Response
 ) => {
+   /* #swagger.tags = ['Clientes']
+     #swagger.description = 'Lista todos los repartidores'
+  */
   try {
     const ciudad = req.query.ciudad;
 
@@ -43,6 +46,10 @@ export const getClienteById = async (
   req: Request,
   res: Response
 ) => {
+        /* #swagger.tags = ['Clientes']
+     #swagger.description = 'Lista todos los Clientes'
+     #swagger.responses[201] = {description: 'Repartidor creado exitosamente'}
+     #swagger.responses[400] = {descripcion: 'Datos invalidos o faltantes'} */
   try {
     const id = Number(req.params.id);
 
@@ -79,8 +86,23 @@ export const createCliente = async (
   req: Request,
   res: Response
 ) => {
+       /*
+      #swagger.tags = ['Clientes']
+      #swagger.description = 'Ingresa un nuevo clientes'
+      #swagger.parameters['body'] = {
+        in: 'body',
+        required: true,
+        schema: {
+              nombres: Adrian,
+      apellidos: Alva,
+      telefono: 986437664,
+      direccion: Trujillo,
+      email: example@email.com,
+      ciudad: Peru
+      }
+    }
+      */
   try {
-
     const {
       nombres,
       apellidos,
@@ -130,6 +152,23 @@ export const updateCliente = async (
   req: Request,
   res: Response
 ) => {
+       /*
+    #swagger.tags = ['Clientes']
+    #swagger.description = 'Actualizar un cliente'
+    #swagger.parameters['id'] = {description: 'ID numérico del pedido'}
+    #swagger.parameters['body'] = {
+        in: 'body',
+        required: true,
+        schema: {
+              nombres: Adrian,
+      apellidos: Alva,
+      telefono: 123456789,
+      direccion: Trujillo,
+      email: example@email.com,
+      ciudad: Peru
+      }
+    }
+  */
   try {
 
     const id = Number(req.params.id);
@@ -207,7 +246,11 @@ export const deleteCliente = async (
   res: Response
 ) => {
   try {
-
+        /*
+    #swagger.tags = ['Clientes']
+    #swagger.description = 'Elimina un cliente'
+    #swagger.parameters['id'] = {description: 'ID numérico del cliente'}
+  */
     const id = Number(req.params.id);
 
     if (isNaN(id)) {

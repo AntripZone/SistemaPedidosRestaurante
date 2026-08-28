@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
     getPedidos,
     getPedidosId,
+    getPedidosPorCliente,
     postPedidos,
     putPedidos,
     deletePedidos } from "../controllers/pedidosControllers.js";
@@ -13,6 +14,7 @@ const router = Router();
 router.get("/",
     getPedidos);
 router.get("/:id", getPedidosId);
+router.get("/cliente/:clienteId", getPedidosPorCliente);
 router.post("/", postPedidos);
 router.put("/:id", putPedidos);
 router.delete("/:id", deletePedidos);

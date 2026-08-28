@@ -68,21 +68,6 @@ export async function crearProducto(
   req: Request,
   res: Response
 ) {
-   /*
-      #swagger.tags = ['Producto']
-      #swagger.summary = 'crear un producto nuevo'
-      #swagger.parameters['body'] = {
-        in: 'body',
-        description: 'Datos para crear un producto nuevo',
-        required: true,
-        schema: {
-          $nombre: "coca cola",
-          $categoria: "bebida",
-          $precio: 15,
-          disponible: true
-        }
-      }
-    */
   try {
     const {
       nombre,

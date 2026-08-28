@@ -197,6 +197,35 @@
         }
       }
     },
+    "/pedidos/cliente/{clienteId}": {
+      "get": {
+        "tags": [
+          "Pedidos"
+        ],
+        "description": "Trae la lista pedido por cliente",
+        "parameters": [
+          {
+            "name": "clienteId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id del cliente"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Repartidor creado exitosamente"
+          },
+          "400": {
+            "description": "Bad Request",
+            "descripcion": "Datos invalidos o faltantes"
+          }
+        }
+      }
+    },
     "/productos/": {
       "get": {
         "description": "",
@@ -210,42 +239,27 @@
         }
       },
       "post": {
-        "tags": [
-          "Producto"
-        ],
-        "summary": "crear un producto nuevo",
         "description": "",
         "parameters": [
           {
             "name": "body",
             "in": "body",
-            "description": "Datos para crear un producto nuevo",
-            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "nombre": {
-                  "type": "string",
-                  "example": "coca cola"
+                  "example": "any"
                 },
                 "categoria": {
-                  "type": "string",
-                  "example": "bebida"
+                  "example": "any"
                 },
                 "precio": {
-                  "type": "number",
-                  "example": 15
+                  "example": "any"
                 },
                 "disponible": {
-                  "type": "boolean",
-                  "example": true
+                  "example": "any"
                 }
-              },
-              "required": [
-                "nombre",
-                "categoria",
-                "precio"
-              ]
+              }
             }
           }
         ],
@@ -341,7 +355,10 @@
     },
     "/clientes/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Clientes"
+        ],
+        "description": "Lista todos los repartidores",
         "parameters": [
           {
             "name": "ciudad",
@@ -359,7 +376,10 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Clientes"
+        ],
+        "description": "Ingresa un nuevo clientes",
         "parameters": [
           {
             "name": "body",
@@ -367,22 +387,13 @@
             "schema": {
               "type": "object",
               "properties": {
-                "nombres": {
+                "in": {
                   "example": "any"
                 },
-                "apellidos": {
+                "required": {
                   "example": "any"
                 },
-                "telefono": {
-                  "example": "any"
-                },
-                "direccion": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                },
-                "ciudad": {
+                "schema": {
                   "example": "any"
                 }
               }
@@ -404,7 +415,10 @@
     },
     "/clientes/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Clientes"
+        ],
+        "description": "Lista todos los Clientes",
         "parameters": [
           {
             "name": "id",
@@ -417,8 +431,12 @@
           "200": {
             "description": "OK"
           },
+          "201": {
+            "description": "Repartidor creado exitosamente"
+          },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request",
+            "descripcion": "Datos invalidos o faltantes"
           },
           "404": {
             "description": "Not Found"
@@ -429,13 +447,17 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Clientes"
+        ],
+        "description": "Actualizar un cliente",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID numérico del pedido"
           },
           {
             "name": "body",
@@ -443,10 +465,13 @@
             "schema": {
               "type": "object",
               "properties": {
-                "telefono": {
+                "in": {
                   "example": "any"
                 },
-                "direccion": {
+                "required": {
+                  "example": "any"
+                },
+                "schema": {
                   "example": "any"
                 }
               }
@@ -469,13 +494,17 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Clientes"
+        ],
+        "description": "Elimina un cliente",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID numérico del cliente"
           }
         ],
         "responses": {
@@ -515,6 +544,12 @@
         ],
         "description": "Crea un nuevo repartidor",
         "parameters": [
+          {
+            "name": "estado",
+            "in": "query",
+            "description": "Estado del pedido",
+            "type": "boolean"
+          },
           {
             "name": "body",
             "in": "body",

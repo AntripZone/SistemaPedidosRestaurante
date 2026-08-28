@@ -22,6 +22,14 @@ export const createPedidosSchema = z.object({
     .nullable(),
 });
 
+export interface pedidoQueryParams {
+  page?: string;
+  limit?: string;
+  search?: string;
+  estado?: string;
+  cliente_id?: number;
+}
+
 export const updatePedidosSchema = z.object({
   estado: z
     .string({

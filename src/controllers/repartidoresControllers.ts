@@ -41,6 +41,7 @@ export async function getRepartidorById(req: Request, res: Response) {
 export async function postRepartidor(req: Request, res: Response) {
    /* #swagger.tags = ['Repartidores']
      #swagger.description = 'Crea un nuevo repartidor'
+     #swagger.parameters['estado'] = {in: 'query', description: 'Estado del pedido', type: 'boolean'}
   */
   try {
     const { nombre, vehiculo, activo } = req.body;

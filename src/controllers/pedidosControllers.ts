@@ -1,9 +1,10 @@
 import { PedidosModel } from "../models/pedidosModel.js";
-import type { Request, Response } from "express";
+import type { Request, Response, NextFunction, Router } from "express";
 import {
   createPedidosSchema,
   updatePedidosSchema,
 } from "../schemas/pedidosSchema.js";
+import { pedidosService} from "../services/pedidosServices.js";
 
 export async function getPedidos(req:Request, res: Response) {
       /* #swagger.tags = ['Pedidos']
@@ -12,9 +13,8 @@ export async function getPedidos(req:Request, res: Response) {
      #swagger.responses[201] = {description: 'Repartidor creado exitosamente'}
      #swagger.responses[400] = {descripcion: 'Datos invalidos o faltantes'} */
     try{
-        const estado = req.query.estado as string | undefined;
-        const pedidos = await PedidosModel.findAll(estado);
-        res.json({totalPedidos: pedidos.length, data:pedidos});
+        const pedidos = await pedidosService.getPedidosFilters(req.query);
+        res.json(pedidos);
     }catch(error){
        console.error("Error al obtener pedidos:", error);
         res.status(500).json({
@@ -48,6 +48,26 @@ export async function getPedidosId(req: Request, res: Response) {
     }
 }
 
+export async function getPedidosPorCliente(req: Request, res: Response, next: NextFunction) {
+          /*
+    #swagger.tags = ['Pedidos']
+    #swagger.description = 'Trae la lista pedido por cliente'
+    #swagger.parameters['clienteId'] = {description: 'Id del cliente'}
+
+     #swagger.responses[201] = {description: 'Repartidor creado exitosamente'}
+     #swagger.responses[400] = {descripcion: 'Datos invalidos o faltantes'} */
+  try {
+    const clienteId = Number(req.params.clienteId);
+    if (!Number.isInteger(clienteId) || clienteId <= 0) {
+      return res.status(400).json({ mensaje: "clienteId inválido" });
+    }
+    const pedidos = await PedidosModel.findByClienteId(clienteId);
+    res.json(pedidos);
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function postPedidos(req: Request, res: Response) {
      /*
       #swagger.tags = ['Pedidos']
@@ -66,11 +86,14 @@ export async function postPedidos(req: Request, res: Response) {
         // req.body ya viene validado por el middleware validateSchema(createPedidoSchema)
     const nuevoPedido = createPedidosSchema.safeParse(req.body);
     console.log(nuevoPedido);
-    if (!nuevoPedido.success) {
-      return res.status(400).json({ error: nuevoPedido.error.issues });
-    }
-    const newPedido = await PedidosModel.create(nuevoPedido.data);
-        res.status(201).json({data: nuevoPedido});
+    if (!nuevoPedido.success) return res.status(400).json({ error: nuevoPedido.error.issues });
+    const { cliente_id, total, id_repartidor } = nuevoPedido.data;
+      const newPedido = await pedidosService.createPedido(
+      cliente_id,
+      total,
+      id_repartidor,
+    );
+        res.status(201).json({data: newPedido});
     }catch(error: any){
         res.status(500).json({error: error.message});
     }
@@ -89,9 +112,12 @@ export async function putPedidos(req: Request, res: Response) {
   */
     try{
         const idBuscado = Number (req.params.id);
-        if (isNaN(idBuscado)) res.status(400).json({error: "El Id debe ser un valor numerico"});
-
+        if (isNaN(idBuscado)) {
+            res.status(400).json({error: "El Id debe ser un valor numerico"});
+            return;
+        }
         const result = updatePedidosSchema.safeParse(req.body);
+
         if (!result.success) {
         res.status(400).json({ error: result.error.issues });
         return;

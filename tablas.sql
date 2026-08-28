@@ -27,7 +27,7 @@ CREATE TABLE pedidos (
     id INTEGER PRIMARY KEY,
     cliente_id INTEGER NOT NULL,
     fecha DATE NOT NULL,
-    estado VARCHAR(15) DEFAULT 'pendiente',
+    estado VARCHAR(15),
     total NUMERIC(8,2),
     id_repartidor INTEGER,
 
