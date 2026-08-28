@@ -1,5 +1,4 @@
 import type { Request, Response, NextFunction } from "express";
-import type { promises } from "node:dns";
 import { ZodType, ZodError } from "zod";
 
 export const validateSchema =
@@ -15,6 +14,7 @@ export const validateSchema =
         });
         return;
       }
+
       res.status(500).json({
         message: "error interno del servidor",
       });

@@ -1,6 +1,5 @@
 import { pool } from "../config/db.js";
 
-// TIPADO DE LA TABLA
 export interface Cliente {
   id: number;
   nombres: string;
@@ -11,7 +10,14 @@ export interface Cliente {
   ciudad: string;
 }
 
-// TIPOS PARA CREAR Y ACTUALIZAR
+export interface PaginaResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export type CreateClienteInput = Omit<Cliente, "id">;
 
 export type UpdateClienteInput = Pick<
@@ -19,12 +25,9 @@ export type UpdateClienteInput = Pick<
   "telefono" | "direccion"
 >;
 
-// FUNCIONES QUE CONSULTAN A LA BASE DE DATOS
+
 export const ClienteModel = {
-
-  // Obtener todos los clientes
   findAll: async (): Promise<Cliente[]> => {
-
     const { rows } = await pool.query(
       "SELECT * FROM clientes ORDER BY id ASC;"
     );
@@ -32,10 +35,7 @@ export const ClienteModel = {
     return rows;
   },
 
-
-  // Buscar cliente por ID
   findById: async (id: number): Promise<Cliente | null> => {
-
     const { rows } = await pool.query(
       "SELECT * FROM clientes WHERE id = $1;",
       [id]
@@ -44,10 +44,7 @@ export const ClienteModel = {
     return rows[0] || null;
   },
 
-
-  // Buscar clientes por ciudad
   findByCiudad: async (ciudad: string): Promise<Cliente[]> => {
-
     const { rows } = await pool.query(
       "SELECT * FROM clientes WHERE ciudad = $1 ORDER BY id ASC;",
       [ciudad]
@@ -56,8 +53,6 @@ export const ClienteModel = {
     return rows;
   },
 
-
-  // Crear cliente
   create: async (
     dato: CreateClienteInput
   ): Promise<Cliente> => {
@@ -90,8 +85,6 @@ export const ClienteModel = {
     return rows[0];
   },
 
-
-  // Actualizar teléfono o dirección
   update: async (
     id: number,
     dato: UpdateClienteInput
@@ -115,8 +108,6 @@ export const ClienteModel = {
     return rows[0] || null;
   },
 
-
-  // Eliminar cliente
   delete: async (id: number): Promise<boolean> => {
 
     const { rowCount } = await pool.query(
@@ -127,4 +118,78 @@ export const ClienteModel = {
     return (rowCount ?? 0) > 0;
   },
 
+  findWithFilter: async (
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+    ciudad?: string
+  ): Promise<PaginaResult<Cliente>> => {
+
+    const conditions: string[] = [];
+    const values: any[] = [];
+    let paramIndex = 1;
+
+    if (search) {
+      conditions.push(
+        `(nombres ILIKE $${paramIndex} OR apellidos ILIKE $${paramIndex})`
+      );
+
+      values.push(`%${search}%`);
+      paramIndex++;
+    }
+
+    if (ciudad) {
+      conditions.push(`ciudad ILIKE $${paramIndex}`);
+      values.push(ciudad);
+      paramIndex++;
+    }
+
+    const whereClause =
+      conditions.length > 0
+        ? `WHERE ${conditions.join(" AND ")}`
+        : "";
+
+    const countQuery = `
+      SELECT COUNT(*)
+      FROM clientes
+      ${whereClause};
+    `;
+
+    const countResult = await pool.query(
+      countQuery,
+      values
+    );
+
+    const total = Number(countResult.rows[0].count);
+
+    const offset = (page - 1) * limit;
+
+    const dataValues = [
+      ...values,
+      limit,
+      offset
+    ];
+
+    const dataQuery = `
+      SELECT *
+      FROM clientes
+      ${whereClause}
+      ORDER BY id ASC
+      LIMIT $${paramIndex}
+      OFFSET $${paramIndex + 1};
+    `;
+
+    const { rows } = await pool.query(
+      dataQuery,
+      dataValues
+    );
+
+    return {
+      data: rows,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit) || 1
+    };
+  }
 };

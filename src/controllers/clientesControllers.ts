@@ -4,27 +4,17 @@ import {
   type CreateClienteInput,
   type UpdateClienteInput,
 } from "../models/clientesModel.js";
+import { clienteService } from "../services/clientesServices.js";
 
-// GET /clientes
-// Obtener todos los clientes
-// También permite filtrar por ciudad
 
 export const getClientes = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const ciudad = req.query.ciudad;
+    const resultado = await clienteService.getClientesFilters(req.query);
 
-    if (ciudad && typeof ciudad === "string") {
-      const clientes = await ClienteModel.findByCiudad(ciudad);
-
-      return res.status(200).json(clientes);
-    }
-
-    const clientes = await ClienteModel.findAll();
-
-    return res.status(200).json(clientes);
+    return res.status(200).json(resultado);
 
   } catch (error: any) {
     console.error("Error al obtener clientes:", error.message);
@@ -36,8 +26,6 @@ export const getClientes = async (
 };
 
 
-// GET /clientes/:id
-// Obtener un cliente por ID
 
 export const getClienteById = async (
   req: Request,
@@ -72,9 +60,6 @@ export const getClienteById = async (
 };
 
 
-// POST /clientes
-// Crear un nuevo cliente
-
 export const createCliente = async (
   req: Request,
   res: Response
@@ -90,7 +75,6 @@ export const createCliente = async (
       ciudad,
     } = req.body;
 
-    // Campos obligatorios según el ejercicio
     if (!nombres || !telefono || !direccion || !ciudad) {
       return res.status(400).json({
         error: "nombres, telefono, direccion y ciudad son obligatorios",
@@ -106,7 +90,14 @@ export const createCliente = async (
       ciudad,
     };
 
-    const cliente = await ClienteModel.create(nuevoCliente);
+    const cliente = await clienteService.createCliente(
+      nombres,
+      apellidos,
+      telefono,
+      direccion,
+      email,
+      ciudad
+    );
 
     return res.status(201).json({
       mensaje: "Cliente creado correctamente",
@@ -122,9 +113,6 @@ export const createCliente = async (
   }
 };
 
-
-// PUT /clientes/:id
-// Actualizar teléfono o dirección
 
 export const updateCliente = async (
   req: Request,
@@ -198,9 +186,6 @@ export const updateCliente = async (
   }
 };
 
-
-// DELETE /clientes/:id
-// Eliminar cliente
 
 export const deleteCliente = async (
   req: Request,
