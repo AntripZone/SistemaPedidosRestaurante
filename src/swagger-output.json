@@ -543,6 +543,7 @@
           "Repartidores"
         ],
         "description": "Crea un nuevo repartidor",
+<<<<<<< HEAD
         "parameters": [
           {
             "name": "estado",
@@ -569,6 +570,8 @@
             }
           }
         ],
+=======
+>>>>>>> 6099ab1893e349c8ecaab723d8a5205648d0ff50
         "responses": {
           "201": {
             "description": "Created"
