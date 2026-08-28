@@ -514,26 +514,6 @@
           "Repartidores"
         ],
         "description": "Crea un nuevo repartidor",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "nombre": {
-                  "example": "any"
-                },
-                "vehiculo": {
-                  "example": "any"
-                },
-                "activo": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
         "responses": {
           "201": {
             "description": "Created"
