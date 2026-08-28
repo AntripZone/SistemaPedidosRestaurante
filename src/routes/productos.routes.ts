@@ -8,7 +8,7 @@ import {
   eliminarProducto
 } from "../controllers/productos.controller.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.get("/", getProducts);
 

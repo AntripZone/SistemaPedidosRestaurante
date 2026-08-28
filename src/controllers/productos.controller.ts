@@ -1,18 +1,20 @@
 import type { Request, Response } from "express";
+import { pool } from "../config/db.js";
 import { ProductsModel } from "../models/productos.model.js";
-
+import{
+  createProductoSchema,
+  updateProductoSchema,
+} from "../schemas/productosSchema.js";
 // GET /productos
 // Obtener todos los productos
-export async function getProducts(
-  req: Request,
-  res: Response
-) {
+export async function getProducts(req: Request,res: Response){
   try {
-    const products = await ProductsModel.findAll();
-
-    return res.status(200).json({
-      totalProductos: products.length,
-      data: products
+    const result = await pool.query("SELECT * FROM productos;");
+    console.log(result);
+    res.json({
+      message:"conexion exitosa a la base de datos",
+      total:result.rowCount,
+      data: result.rows
     });
 
   } catch (error: any) {
@@ -84,38 +86,16 @@ export async function crearProducto(
       }
     */
   try {
-    const {
-      nombre,
-      categoria,
-      precio,
-      disponible
-    } = req.body;
+    const result = createProductoSchema.safeParse(req.body);
 
-    // Validar datos obligatorios
-    if (
-      !nombre ||
-      !categoria ||
-      precio === undefined ||
-      disponible === undefined
-    ) {
+    if(!result.success){
       return res.status(400).json({
-        error: "Nombre, categoria, precio y disponible son obligatorios"
+        error: result.error.issues
       });
     }
-
-    // Validar precio
-    if (typeof precio !== "number" || precio <= 0) {
-      return res.status(400).json({
-        error: "El precio debe ser un número mayor a 0"
-      });
-    }
-
-    const newProduct = await ProductsModel.create({
-      nombre,
-      categoria,
-      precio,
-      disponible
-    });
+ 
+    const newProduct = await ProductsModel.create(result.data);
+  
 
     return res.status(201).json({
       data: newProduct
@@ -130,46 +110,23 @@ export async function crearProducto(
   }
 }
 
-
-// PUT /productos/:id
-// Modificar un producto
-export async function actualizarProducto(
-  req: Request,
-  res: Response
-) {
-  try {
+export async function actualizarProducto(req: Request,res: Response){
+  try{
     const id = Number(req.params.id);
-
-    if (isNaN(id)) {
-      return res.status(400).json({
-        error: "El ID debe ser un valor numérico"
-      });
+    if(isNaN(id)){
+      res.status(400).json({error:"el id debe ser un numer"});
     }
-
-    const productoUpdate = await ProductsModel.update(
-      id,
-      req.body
-    );
-
-    if (!productoUpdate) {
-      return res.status(404).json({
-        error: "Producto no encontrado"
-      });
+    const productoUpdate =await ProductsModel.update(id, req.body);
+    if(!productoUpdate){
+      res.status(404).json({error: "producto no encontrado"});
+      return;
     }
-
-    return res.status(200).json({
-      data: productoUpdate
-    });
-
-  } catch (error: any) {
-    console.error("Error al actualizar producto:", error);
-
-    return res.status(500).json({
-      error: error.message
-    });
+    res.json({data: productoUpdate});
+  }catch(error: any){
+    res.status(500).json({error:error.message});
   }
-}
 
+}
 
 // DELETE /productos/:id
 // Eliminar un producto

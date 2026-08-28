@@ -7,7 +7,7 @@ import {
   deleteRepartidor, 
 } from "../controllers/repartidoresControllers.js";
 
-const router = Router();
+const router: Router = Router();
 
 router.get("/", getRepartidores);
 router.get("/:id", getRepartidorById);
